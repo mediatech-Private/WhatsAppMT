@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  background:#0b141a;
+}
+
+.pantalla{
+  display:none;
+  width:100%;
+  height:100vh;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+.activa{
+  display:flex;
+}
+
+/* ================= CARGA ================= */
+#carga{
+  background:linear-gradient(135deg,#07111a,#0f202d,#122c3d);
+  color:#f2f7fb;
+}
+
+#logoCarga{
+  width:120px;
+  margin-bottom:30px;
+}
+
+.barra{
+  width:70%;
+  max-width:320px;
+  height:12px;
+  background:#1e1e1e;
+  border-radius:24px;
+  overflow:hidden;
+}
+
+.progreso{
+  height:100%;
+  width:0%;
+  background:#00e676;
+  animation:llenar 6s linear forwards;
+}
+
+@keyframes llenar{
+  from{width:0%;}
+  to{width:100%;}
+}
+
+@keyframes pulse{
+  0%{ opacity:1; transform:scale(1); }
+  50%{ opacity:.4; transform:scale(1.3); }
+  100%{ opacity:1; transform:scale(1); }
+}
+
+/* ================= LOGIN ================= */
+#login{
+  background:url('img/fondo.png') no-repeat center/cover;
+}
+
+.contenedor{
+  width:90%;
+  max-width:360px;
+  background:rgba(15,23,32,.82);
+  backdrop-filter:blur(5px);
+  border-radius:24px;
+  padding:30px 20px;
+  text-align:center;
+  color:#f2f7fb;
+}
+
+#logoLogin{
+  width:95px;
+  margin-bottom:15px;
+}
+
+h2{
+  font-size:20px;
+  margin-bottom:15px;
+}
+
+input{
+  width:100%;
+  padding:13px;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  outline:none;
+  font-size:15px;
+}
+
+button{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:12px;
+  margin-top:15px;
+  background:linear-gradient(135deg,#00c853,#00e5ff);
+  color:#f2f7fb;
+  font-size:16px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+button:hover{
+  transform:scale(1.02);
+}
+
+#mensajeError{
+  margin-top:12px;
+  color:#ff5252;
+  font-size:14px;
+}
+
+/* ================= CHATS ================= */
+#chats{
+  background:#0b141a;
+  color:#f2f7fb;
+  overflow-y:auto;
+}
+
+.barraSuperior{
+  width:100%;
+  background:#16222c;
+  padding:15px;
+  font-size:18px;
+  font-weight:bold;
+  text-align:center;
+}
+
+.listaChats{
+  width:100%;
+  max-width:500px;
+}
+
+.chat{
+  display:flex;
+  align-items:center;
+  padding:15px;
+  border-bottom:1px solid #1f2c34;
+  background:#101820;
+  cursor:pointer;
+  transition: background 0.2s;
+}
+
+.chat:hover {
+  background: #16222c;
+}
+
+.foto{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  background:#2a3942;
+  margin-right:12px;
+}
+
+.info{
+  flex:1;
+}
+
+.meta-chat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.nombre{
+  font-size:16px;
+  font-weight: 600;
+}
+
+.hora {
+  font-size: 12px;
+  color: #8696a0;
+}
+
+.subcontenido {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mensaje{
+  color:#8696a0;
+  filter:blur(5px);
+  user-select:none;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+
+.check {
+  font-size: 14px;
+  color: #53bdeb;
+  margin-left: 5px;
+}
+
+.aviso{
+  width:90%;
+  max-width:500px;
+  background:#16222c;
+  padding:15px;
+  border-radius:15px;
+  margin:15px;
+  text-align:center;
+}
+
+#btnDesbloquear{
+  background:linear-gradient(135deg,#ff9800,#ff5722);
+}
+
+/* ================= MODAL INTERNO (ALERTA) ================= */
+.modal-sistema {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-contenido {
+  background: #16222c;
+  border: 1px solid #ff5722;
+  border-radius: 20px;
+  padding: 25px;
+  width: 85%;
+  max-width: 380px;
+  text-align: center;
+  color: #f2f7fb;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.modal-contenido h4 {
+  color: #ff9800;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.modal-contenido p {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #c7d1d8;
+  margin-bottom: 20px;
+}
+
+.modal-btn {
+  background: #2a3942;
+  color: #f2f7fb;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.modal-btn:hover {
+  background: #3d515e;
+}
+
+/* ================= CONTACTO ================= */
+#contacto{
+  background:#0b141a;
+  color:#f2f7fb;
+  padding:20px;
+}
+
+.tarjeta{
+  background:#16222c;
+  padding:25px;
+  border-radius:24px;
+  width:90%;
+  max-width:400px;
+  text-align:center;
+}
+
+.tarjeta h3{
+  margin-bottom:15px;
+  font-size:22px;
+}
+
+.tarjeta p{
+  color:#c7d1d8;
+  line-height:1.5;
+  margin-bottom:15px;
+}
+
+.contactoBtn{
+  display:block;
+  text-decoration:none;
+  background:#25d366;
+  color:#f2f7fb;
+  padding:14px;
+  border-radius:12px;
+  margin-top:10px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div id="miModal" class="modal-sistema">
+  <div class="modal-contenido">
+    <h4>[ ALERTA DE SEGURIDAD ]</h4>
+    <p id="modalTexto">Canal restringido.</p>
+    <button class="modal-btn" onclick="cerrarModal()">ENTENDIDO</button>
+  </div>
+</div>
+
+<div id="carga" class="pantalla activa">
+  <img id="logoCarga" src="logo.png">
+  <div class="barra">
+    <div class="progreso"></div>
+  </div>
+</div>
+
+<div id="login" class="pantalla">
+  <div class="contenedor">
+    <img id="logoLogin" src="logo.png">
+    <h2>
+      SISTEMA ENLAZADO<br>
+      VALIDAR CLAVE SEGURA
+    </h2>
+
+    <div id="pasoUsuario">
+      <input type="text" id="numeroUsuario" placeholder="Número de usuario">
+      <button onclick="verificarUsuario()">CONTINUAR</button>
+    </div>
+
+    <div id="pasoPassword" style="display:none;">
+      <input type="password" id="password" placeholder="Introducir clave cifrada">
+      <button onclick="verificarPassword()">INGRESAR</button>
+    </div>
+
+    <p id="mensajeError"></p>
+  </div>
+</div>
+
+<div id="chats" class="pantalla">
+
+  <div class="barraSuperior">
+    +52 951 366 2967
+  </div>
+
+  <div class="aviso">
+    Conexión parcial establecida. Actividad reciente detectada en segundo plano. Se necesita autorización avanzada para revelar el contenido protegido.
+  </div>
+
+  <div class="estadoSistema" style="width:90%;max-width:500px;background:#101820;padding:12px 15px;border-radius:12px;margin-bottom:12px;color:#7bd88f;font-size:14px;display:flex;justify-content:space-between;align-items:center;">
+    <span id="estadoTexto">Analizando actividad reciente...</span>
+    <span style="width:10px;height:10px;background:#00e676;border-radius:50%;display:inline-block;animation:pulse 1s infinite;"></span>
+  </div>
+
+  <div class="listaChats">
+
+    <div class="chat" onclick="intentarAbrirChat('Osc***')">
+      <div class="foto"></div>
+      <div class="info">
+        <div class="meta-chat">
+          <div class="nombre">Osc***</div>
+          <div class="hora">ayer</div>
+        </div>
+        <div class="subcontenido">
+          <div class="mensaje">Ya revisé el servidor y borré el historial anterior para que no quede rastro...</div>
+          <span class="check">✓✓</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat" onclick="intentarAbrirChat('+52 ••• •• 1842')">
+      <div class="foto"></div>
+      <div class="info">
+        <div class="meta-chat">
+          <div class="nombre">+52 ••• •• 1842</div>
+          <div class="hora">ayer</div>
+        </div>
+        <div class="subcontenido">
+          <div class="mensaje">Descarga de paquete multimedia e imágenes completada con éxito.</div>
+          <span class="check">✓✓</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat" onclick="intentarAbrirChat('Jav***')">
+      <div class="foto"></div>
+      <div class="info">
+        <div class="meta-chat">
+          <div class="nombre">Jav***</div>
+          <div class="hora">hace 2 días</div>
+        </div>
+        <div class="subcontenido">
+          <div class="mensaje">Recuerda que los accesos premium expiran si no se realiza la validación manual.</div>
+          <span class="check" style="color: #8696a0;">✓✓</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat" onclick="intentarAbrirChat('Caro')">
+      <div class="foto"></div>
+      <div class="info">
+        <div class="meta-chat">
+          <div class="nombre">Caro*****</div>
+          <div class="hora">hace 3 días</div>
+        </div>
+        <div class="subcontenido">
+          <div class="mensaje">Respaldo automático de logs cifrados guardado en la partición oculta.</div>
+          <span class="check">✓✓</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat" onclick="intentarAbrirChat('+52 ••• •• 9021')">
+      <div class="foto"></div>
+      <div class="info">
+        <div class="meta-chat">
+          <div class="nombre">+52 ••• •• 9021</div>
+          <div class="hora">hace 5 días</div>
+        </div>
+        <div class="subcontenido">
+          <div class="mensaje">¿Pudiste ver los archivos que te mandé antes del bloqueo de seguridad?</div>
+          <span class="check" style="color: #8696a0;">✓✓</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="width:90%;max-width:500px; margin-top: 15px;">
+    <button id="btnDesbloquear" onclick="abrirContacto()">
+      SOLICITAR ACCESO TOTAL
+    </button>
+  </div>
+
+</div>
+
+<div id="contacto" class="pantalla">
+  <div class="tarjeta">
+    <h3>Autorización requerida</h3>
+    <p>
+      El sistema mantiene parte de la información restringida. Comunícate con soporte autorizado para completar la validación y habilitar el acceso total.
+    </p>
+    <a class="contactoBtn" href="https://wa.me/17744035914" target="_blank">
+      CONTACTAR SOPORTE
+    </a>
+    <button onclick="volverChats()">VOLVER</button>
+  </div>
+</div>
+
+<script>
+/* ===== CAMBIO AUTOMÁTICO ===== */
+setTimeout(() => {
+  document.getElementById('carga').classList.remove('activa');
+  document.getElementById('login').classList.add('activa');
+}, 6000);
+
+/* ===== USUARIOS AUTORIZADOS ===== */
+const usuariosPermitidos =['9513662967'];
+
+/* ===== VERIFICAR USUARIO ===== */
+function verificarUsuario(){
+  const numero = document.getElementById('numeroUsuario').value.trim();
+  if(usuariosPermitidos.includes(numero)){
+    document.getElementById('pasoUsuario').style.display = 'none';
+    document.getElementById('pasoPassword').style.display = 'block';
+    document.getElementById('mensajeError').innerText = '';
+  }else{
+    document.getElementById('numeroUsuario').value = '';
+    document.getElementById('mensajeError').innerText = 'Número de usuario no autorizado';
+    animarError();
+  }
+}
+
+/* ===== VERIFICAR PASSWORD ===== */
+function verificarPassword(){
+  const pass = document.getElementById('password').value;
+  const contraseñaCorrecta = 'Mediatechv20nupl';
+  if(pass === contraseñaCorrecta){
+    document.getElementById('login').classList.remove('activa');
+    document.getElementById('chats').classList.add('activa');
+  }else{
+    document.getElementById('password').value = '';
+    document.getElementById('mensajeError').innerText = 'Contraseña incorrecta';
+    animarError();
+  }
+}
+
+/* ===== ANIMACIÓN ERROR ===== */
+function animarError(){
+  document.querySelector('.contenedor').style.transform = 'translateX(10px)';
+  setTimeout(() => { document.querySelector('.contenedor').style.transform = 'translateX(-10px)'; },100);
+  setTimeout(() => { document.querySelector('.contenedor').style.transform = 'translateX(0px)'; },200);
+}
+
+/* ===== INTERACCIÓN CON CHATS (MODAL PROPIO) ===== */
+function intentarAbrirChat(nombreUsuario) {
+  const modal = document.getElementById('miModal');
+  const texto = document.getElementById('modalTexto');
+  
+  texto.innerHTML = `No se puede abrir la conversación con <strong>"${nombreUsuario}"</strong>.<br><br>Por razones de privacidad y seguridad, el contenido de los mensajes no se encuentra disponible. Si requiere la liberación del servicio, le solicitamos ponerse en contacto con el técnico encargado para su gestión correspondiente.<br><br>Utiliza la opción de "Acceso Total".`;
+  modal.style.display = 'flex';
+}
+
+function cerrarModal() {
+  document.getElementById('miModal').style.display = 'none';
+}
+
+/* ===== CONTACTO ===== */
+function abrirContacto(){
+  document.getElementById('chats').classList.remove('activa');
+  document.getElementById('contacto').classList.add('activa');
+}
+
+function volverChats(){
+  document.getElementById('contacto').classList.remove('activa');
+  document.getElementById('chats').classList.add('activa');
+}
+
+const estados = [
+  'Recibiendo nuevos mensajes...',
+  'Verificando registros protegidos...',
+  'Sincronizando datos cifrados...',
+  'Procesando conversaciones archivadas...',
+  'Estableciendo conexión segura...'
+];
+
+let indiceEstado = 0;
+setInterval(() => {
+  const estado = document.getElementById('estadoTexto');
+  if(estado){
+    indiceEstado++;
+    if(indiceEstado >= estados.length){ indiceEstado = 0; }
+    estado.innerText = estados[indiceEstado];
+  }
+}, 3000);
+</script>
+
+</body>
+</html>
